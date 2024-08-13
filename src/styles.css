@@ -73,18 +73,28 @@ body {
 
 .board-row:after {
   clear: both;
-  content: '';
+  content: "";
   display: table;
 }
 
 .status {
   margin-bottom: 10px;
 }
+
 .game {
   display: flex;
   flex-direction: row;
 }
 
+.game-board {
+  margin-top: 0px;
+}
+
 .game-info {
-  margin-left: 20px;
+  margin-top: 0px;
+  margin-left: 5px;
+}
+
+.sort-button {
+  margin-left: 100px;
 }
