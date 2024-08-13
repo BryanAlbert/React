@@ -8,11 +8,34 @@ function Square({ value, onSquareClick }) {
   );
 }
 
+function Row({ rowNumber, squares, clickHandler }) {
+  const row = [rowNumber * 3, rowNumber * 3 + 1, rowNumber * 3 + 2].map(
+    (index, i) => {
+      return (
+        <Square
+          value={squares[index]}
+          onSquareClick={() => clickHandler(index)}
+        />
+      );
+    }
+  );
+
+  return <div className="board-row">{row}</div>;
+}
+
+function Rows({ squares, clickHandler }) {
+  return [0, 1, 2].map((index, i) => {
+    return (
+      <Row rowNumber={index} squares={squares} clickHandler={clickHandler} />
+    );
+  });
+}
+
 function Board({ xIsNext, squares, onPlay }) {
-  function handleClick(i) {
-    if (!calculateWinner(squares) && !squares[i]) {
+  function handleClick(index) {
+    if (!calculateWinner(squares) && !squares[index]) {
       const nextSquares = squares.slice();
-      nextSquares[i] = xIsNext ? "X" : "O";
+      nextSquares[index] = xIsNext ? "X" : "O";
       onPlay(nextSquares);
     }
   }
@@ -25,21 +48,7 @@ function Board({ xIsNext, squares, onPlay }) {
   return (
     <>
       <div className="status">{status}</div>
-      <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
-      </div>
+      <Rows squares={squares} clickHandler={handleClick} />
     </>
   );
 }
