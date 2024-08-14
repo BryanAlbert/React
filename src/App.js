@@ -91,17 +91,23 @@ export default function Game() {
 
   const moves = history.map((squares, index) => {
     const move = sortDown ? index : history.length - index - 1;
+    const coordinates =
+      move !== history.length - 1
+        ? `(${Math.floor(index / 3) + 1}, ${(index % 3) + 1})`
+        : "";
     if (move === currentMove) {
       return (
         <li key={move}>
-          <span className="status">Currnet move: {move + 1}</span>
+          <span className="status">
+            Current move: {move + 1} {coordinates}
+          </span>
         </li>
       );
     } else {
       return (
         <li key={move}>
           <button style={{ margin: "1px" }} onClick={() => jumpTo(index)}>
-            Go to move {move + 1}
+            Move {move + 1} {coordinates}
           </button>
         </li>
       );
