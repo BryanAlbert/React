@@ -8,15 +8,21 @@ const Square = ({ value, onSquareClick }) => {
   );
 };
 
-const Row = ({ rowNumber, squares, clickHandler }) => {
+const Row = ({ rowNumber, squares, three, clickHandler }) => {
   const row = [rowNumber * 3, rowNumber * 3 + 1, rowNumber * 3 + 2].map(
     (index, i) => {
       return (
-        <Square
+        <button
+          className="square"
           key={index}
-          value={squares[index]}
-          onSquareClick={() => clickHandler(index)}
-        />
+          onClick={() => clickHandler(index)}
+          style={{
+            background:
+              three && three.some((x) => x === index) ? "#f55" : "#fff",
+          }}
+        >
+          {squares[index]}
+        </button>
       );
     }
   );
@@ -24,13 +30,14 @@ const Row = ({ rowNumber, squares, clickHandler }) => {
   return <div className="board-row">{row}</div>;
 };
 
-const Rows = ({ squares, clickHandler }) => {
+const Rows = ({ squares, three, clickHandler }) => {
   return [0, 1, 2].map((index, i) => {
     return (
       <Row
         key={index}
         rowNumber={index}
         squares={squares}
+        three={three}
         clickHandler={clickHandler}
       />
     );
@@ -46,15 +53,17 @@ const Board = ({ xIsNext, squares, onPlay }) => {
     }
   };
 
-  const winner = calculateWinner(squares);
-  let status = winner
-    ? "Winner: " + winner
+  const three = calculateWinner(squares);
+  let status = three
+    ? "Winner: " + squares[three[0]]
+    : !squares.some((x) => !x)
+    ? "Draw"
     : "Next player: " + (xIsNext ? "X" : "O");
 
   return (
     <>
       <div className="status">{status}</div>
-      <Rows squares={squares} clickHandler={handleClick} />
+      <Rows squares={squares} three={three} clickHandler={handleClick} />
     </>
   );
 };
@@ -116,7 +125,7 @@ export default function Game() {
 }
 
 const calculateWinner = (squares) => {
-  const lines = [
+  const threes = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
@@ -127,10 +136,10 @@ const calculateWinner = (squares) => {
     [2, 4, 6],
   ];
 
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
+  for (let i = 0; i < threes.length; i++) {
+    const [a, b, c] = threes[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c])
-      return squares[a];
+      return threes[i];
   }
 
   return null;
