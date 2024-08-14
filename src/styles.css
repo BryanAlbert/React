@@ -92,9 +92,13 @@ body {
 
 .game-info {
   margin-top: 0px;
-  margin-left: 5px;
+  margin-left: 15px;
 }
 
 .sort-button {
-  margin-left: 100px;
+  margin-left: 0px;
+}
+
+.move-list {
+  margin-top: 5px;
 }

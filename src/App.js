@@ -91,7 +91,9 @@ export default function Game() {
     } else {
       return (
         <li key={move}>
-          <button onClick={() => jumpTo(index)}>Go to move {move + 1}</button>
+          <button style={{ margin: "1px" }} onClick={() => jumpTo(index)}>
+            Go to move {move + 1}
+          </button>
         </li>
       );
     }
@@ -103,10 +105,11 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <button className="sort-button" onClick={changeSort}>
-          Sort
-        </button>
-        <ul>{moves}</ul>
+        <label className="sort-button">
+          <input type="checkbox" checked={sortDown} onChange={changeSort} />{" "}
+          Sort descending
+        </label>
+        <ul className="move-list">{moves}</ul>
       </div>
     </div>
   );
