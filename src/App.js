@@ -1,13 +1,5 @@
 import { useState } from "react";
 
-const Square = ({ value, onSquareClick }) => {
-  return (
-    <button className="square" onClick={onSquareClick}>
-      {value}
-    </button>
-  );
-};
-
 const Row = ({ rowNumber, squares, three, clickHandler }) => {
   const row = [rowNumber * 3, rowNumber * 3 + 1, rowNumber * 3 + 2].map(
     (index, i) => {
@@ -44,12 +36,13 @@ const Rows = ({ squares, three, clickHandler }) => {
   });
 };
 
-const Board = ({ xIsNext, squares, onPlay }) => {
+const Board = ({ xIsNext, squares, onMove }) => {
   const handleClick = (index) => {
     if (!calculateWinner(squares) && !squares[index]) {
       const nextSquares = squares.slice();
+      nextSquares[9] = index;
       nextSquares[index] = xIsNext ? "X" : "O";
-      onPlay(nextSquares);
+      onMove(nextSquares);
     }
   };
 
@@ -69,13 +62,13 @@ const Board = ({ xIsNext, squares, onPlay }) => {
 };
 
 export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [history, setHistory] = useState([Array(10).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const [sortDown, setSortDown] = useState(true);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
-  const handlePlay = (nextSquares) => {
+  const handleMove = (nextSquares) => {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
@@ -89,18 +82,17 @@ export default function Game() {
     setSortDown(!sortDown);
   };
 
-  const moves = history.map((squares, index) => {
+  const ordered = sortDown ? history : history.slice().reverse();
+  const moves = ordered.map((squares, index) => {
     const move = sortDown ? index : history.length - index - 1;
-    const coordinates =
-      move !== history.length - 1
-        ? `(${Math.floor(index / 3) + 1}, ${(index % 3) + 1})`
-        : "";
+    const coordinates = `(${Math.floor(squares[9] / 3) + 1}, 
+    ${(squares[9] % 3) + 1})`;
     const status =
       move == 0
         ? "Start"
         : calculateWinner(squares) === null
         ? `Move ${move} ${coordinates}`
-        : `Final move: ${move} ${coordinates}`;
+        : `Final move ${move} ${coordinates}`;
     if (move !== currentMove) {
       return (
         <li key={move}>
@@ -121,7 +113,7 @@ export default function Game() {
   return (
     <div className="game">
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board xIsNext={xIsNext} squares={currentSquares} onMove={handleMove} />
       </div>
       <div className="game-info">
         <label className="sort-button">
