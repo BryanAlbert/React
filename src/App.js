@@ -95,20 +95,24 @@ export default function Game() {
       move !== history.length - 1
         ? `(${Math.floor(index / 3) + 1}, ${(index % 3) + 1})`
         : "";
-    if (move === currentMove) {
+    const status =
+      move == 0
+        ? "Start"
+        : calculateWinner(squares) === null
+        ? `Move ${move} ${coordinates}`
+        : `Final move: ${move} ${coordinates}`;
+    if (move !== currentMove) {
       return (
         <li key={move}>
-          <span className="status">
-            Current move: {move + 1} {coordinates}
-          </span>
+          <button style={{ margin: "1px" }} onClick={() => jumpTo(index)}>
+            {status}
+          </button>
         </li>
       );
     } else {
       return (
         <li key={move}>
-          <button style={{ margin: "1px" }} onClick={() => jumpTo(index)}>
-            Move {move + 1} {coordinates}
-          </button>
+          <span className="status">{status}</span>
         </li>
       );
     }
