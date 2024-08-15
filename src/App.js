@@ -82,29 +82,39 @@ export default function Game() {
     setSortDown(!sortDown);
   };
 
+  const undo = (redo) => {
+    console.log(`undo with ${redo}`);
+    if (redo) {
+      if (currentMove > 0) setCurrentMove(currentMove - 1);
+    } else {
+      if (currentMove < history.length - 1) setCurrentMove(currentMove + 1);
+    }
+  };
+
   const ordered = sortDown ? history : history.slice().reverse();
   const moves = ordered.map((squares, index) => {
     const move = sortDown ? index : history.length - index - 1;
-    const coordinates = `(${Math.floor(squares[9] / 3) + 1}, 
-    ${(squares[9] % 3) + 1})`;
-    const status =
+    let line = `${move}: ${squares[squares[9]]} at (${
+      Math.floor(squares[9] / 3) + 1
+    }, ${(squares[9] % 3) + 1})`;
+    line =
       move == 0
         ? "Start"
         : calculateWinner(squares) === null
-        ? `Move ${move} ${coordinates}`
-        : `Final move ${move} ${coordinates}`;
+        ? `Move ${line}`
+        : `Final move ${line}`;
     if (move !== currentMove) {
       return (
         <li key={move}>
           <button style={{ margin: "1px" }} onClick={() => jumpTo(index)}>
-            {status}
+            {line}
           </button>
         </li>
       );
     } else {
       return (
         <li key={move}>
-          <span className="status">{status}</span>
+          <span className="current-line">{line}</span>
         </li>
       );
     }
@@ -116,7 +126,23 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onMove={handleMove} />
       </div>
       <div className="game-info">
-        <label className="sort-button">
+        <div>
+          <button
+            className="undo-button"
+            onClick={() => undo(true)}
+            disabled={currentMove === 0}
+          >
+            Undo
+          </button>
+          <button
+            className="undo-button"
+            onClick={() => undo(false)}
+            disabled={currentMove === history.length - 1}
+          >
+            Redo
+          </button>
+        </div>
+        <label className="sort-label">
           <input type="checkbox" checked={sortDown} onChange={changeSort} />{" "}
           Sort descending
         </label>

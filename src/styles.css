@@ -79,6 +79,7 @@ body {
 
 .status {
   margin-bottom: 10px;
+  width: 110px;
 }
 
 .game {
@@ -93,12 +94,24 @@ body {
 .game-info {
   margin-top: 0px;
   margin-left: 15px;
+  display: flex;
+  flex-direction: column;
 }
 
-.sort-button {
-  margin-left: 0px;
+.undo-button {
+  margin-left: 5px;
 }
 
 .move-list {
   margin-top: 5px;
+}
+
+.sort-label {
+  margin-top: 5px;
+  margin-left: 0px;
+}
+
+.current-line {
+  font-size: small;
+  margin-left: 8px;
 }
